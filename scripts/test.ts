@@ -11,13 +11,10 @@ async function main() {
     signer
   );
 
-  const attackerContractFactory = await ethers.getContractFactory(
+  const attackerContract = await ethers.getContractAt(
     "Attacker",
+    ATTACKER_CONTRACT,
     signer
-  );
-
-  const attackerContract = await attackerContractFactory.deploy(
-    CONTRACT_ADDRESS
   );
 
   let contractOwner = await contract.owner();
