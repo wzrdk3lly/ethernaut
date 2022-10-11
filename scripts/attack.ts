@@ -8,7 +8,7 @@ async function main() {
   const delegateContract = await Delegate.deploy(owner);
 
   const Delegation = await ethers.getContractFactory("Delegation");
-  const delegationContract = await Delegation.deploy(owner);
+  const delegationContract = await Delegation.deploy(delegateContract.address);
 
   const delegateDeploymentTx = await delegateContract.deployed();
   const delegationDeploymentTx = await delegationContract.deployed();
