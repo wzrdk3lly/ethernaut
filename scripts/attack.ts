@@ -27,7 +27,7 @@ async function main() {
 
   const attackTx = await signer.sendTransaction({
     from: owner,
-    to: delegateContract.address,
+    to: delegationContract.address,
     value: 0,
     gasLimit: 50000,
     data: pwnData.data,
