@@ -4,8 +4,8 @@ pragma solidity ^0.8.17;
 contract Delegate {
     address public owner;
 
-    constructor(address _owner) {
-        owner = _owner;
+    constructor(address owner_) {
+        owner = owner_;
     }
 
     function pwn() public {
@@ -17,8 +17,8 @@ contract Delegation {
     address public owner;
     Delegate delegate;
 
-    constructor(address _delegateAddress) {
-        delegate = Delegate(_delegateAddress);
+    constructor(address delegateAddress_) {
+        delegate = Delegate(delegateAddress_);
         owner = msg.sender;
     }
 
