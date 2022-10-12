@@ -1,5 +1,7 @@
 import { ethers } from "hardhat";
 import { expect } from "chai";
+import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
+import { any } from "hardhat/internal/core/params/argumentTypes";
 
 const CONTRACT_ADDRESS = "0xD3a8e62a14410F3bCA078A2d7ccE422Bf0B77C48";
 const PLAYER_ADDRESS = "0x81215d34367AF48d01E728AfF2976d9Df32fE604";
@@ -13,20 +15,41 @@ async function main() {
     signer
   );
 
-  const attackerContractFactory = await ethers.getContractFactory(
+  //Only needed for deployment
+  // const attackerContractFactory = await ethers.getContractFactory(
+  //   "Attacker",
+  //   signer
+  // );
+
+  //Only needed for deployment
+  // const attackerContract = await attackerContractFactory.deploy();
+
+  const attackerContract = await ethers.getContractAt(
     "Attacker",
+    ATTACKER_CONTRACT,
     signer
   );
 
-  const attackerContract = await attackerContractFactory.deploy();
-
-  console.log("lets deploy the attacker contract", attackerContract);
-
-  // console.log("Attacker contract deployment ");
-  // await expect(attackerContract)
+  // In order to grab the contract details you can just log this
+  // console.log("lets Grab the attacker contract", attackerContract);
+  // const depositValue = ethers.utils.parseEther(".0005");
+  // // Lets test our deposit function
+  // console.log("Sending the contract some money with the deposit");
+  // let depositTX = await attackerContract.depositMoney({
+  //   value: depositValue,
+  //   from: PLAYER_ADDRESS,
+  // });
+  // console.log(depositTX);
+  // console.log("checking if the the contract logged the deposit");
+  // await expect(attackerContract.depositMoney())
   //   .to.emit(attackerContract, "depositEmitter")
-  //   .withArgs(3);
-
+  //   .withArgs(anyValue, anyValue, anyValue);
+  // console.log(
+  //   "checking if the the contract self destructed and sent the money"
+  // );
+  await expect(attackerContract.selfDestruct())
+    .to.emit(attackerContract, "selfDestructEmitter")
+    .withArgs(PLAYER_ADDRESS);
   // Comment out if you don't need the attacker account
   // const attackerContract = await ethers.getContractAt(
   //   "Attacker",
