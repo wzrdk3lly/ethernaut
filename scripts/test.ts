@@ -11,6 +11,8 @@ async function main() {
     CONTRACT_ADDRESS,
     signer
   );
+
+  //test
   // const attackerContractFactory = await ethers.getContractFactory(
   //   "Attacker",
   //   signer
